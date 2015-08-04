@@ -32,3 +32,22 @@ function newClass($className, $module=''){
 }
 
 
+function config($key=""){
+    static $settings  =   array();
+    if (count($settings)==0){
+    	foreach(glob("config/*.php") as $cfgFile){
+    		$fname = basename($cfgFile, ".php");
+    		$config = array();
+    		include_once($cfgFile);
+    		$settings[$fname] = $config;
+    	}
+	}
+	if ($key=="") return $settings;
+	$arr=explode(".", $key);
+	$ret = $settings;
+	for($i=0; $i<count($arr); $i++){
+		$ret = isset($ret[$arr[$i]])? $ret[$arr[$i]] : NULL;
+	}
+	return $ret;
+}
+
