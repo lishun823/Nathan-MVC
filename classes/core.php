@@ -27,6 +27,9 @@ function loadClasses($className) {
 
 /**
  * 加载指定URL的class
+ * 举例：
+ * $user = newClass("account.user");
+ * $excel = newClass("include/class/lib/phpExcel");
  *
  * @param  [type] $classPath [路径， 或者 "module名.model名"]
  * @return [type]            [返回一个对象的实例]
@@ -38,7 +41,7 @@ function newClass($classPath) {
 		$fileName = $module . "/models/" . $className . "Model.php";
 	    $clsName = ucfirst($className) . "Model";
 	}else{
-		$fileName =$classPath;
+		$fileName =$classPath.".php";
 		$clsName=basename($fileName, ".php");
 	}
 	require $fileName;
