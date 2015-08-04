@@ -7,7 +7,7 @@ class Loader {
     //factory method which establishes the requested controller as an object
     public function createController() {
         //check our requested controller's class file exists and require it if so
-        $controllerFile = M. "/controllers/". C . "Controller.php";
+        $controllerFile = "application/".M. "/controllers/". C . "Controller.php";
         if (file_exists($controllerFile)) {
             require ($controllerFile);
         } else {

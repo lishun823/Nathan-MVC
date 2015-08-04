@@ -5,11 +5,7 @@ abstract class BaseController {
     protected $model;
     public function __construct($action) {
         $this->action = $action;
-        $modelFile = M."/models/".C."Model.php";
-        if (file_exists($modelFile)){
-            $modelName = ucfirst(C)."Model";
-            $this->model = new $modelName();
-        }
+        $this->model = newClass(M.".".C);
     }
 
     //executes the requested method

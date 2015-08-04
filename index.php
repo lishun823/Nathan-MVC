@@ -17,7 +17,7 @@ define('IS_CGI',(0 === strpos(PHP_SAPI,'cgi') || false !== strpos(PHP_SAPI,'fcgi
 define('IS_WIN',strstr(PHP_OS, 'WIN') ? 1 : 0 );
 define('IS_CLI',PHP_SAPI=='cli'? 1   :   0);
 
-require("classes/functions.php");
+require("application/common/functions.php");
 require("classes/core.php");
 
 /**
@@ -56,8 +56,8 @@ spl_autoload_register('loadClasses');
 ob_start();
 
 if (preg_match("/^\w+$/", M) && preg_match("/^\w+$/", C) && preg_match("/^\w+$/", A)){
-	require("classes/basecontroller.php");
-	require("classes/basemodel.php");
+	require("application/common/basecontroller.php");
+	require("application/common/basemodel.php");
 	$loader = new Loader();
 	$controller = $loader->createController();
 	if (is_object($controller)) $controller->executeAction();

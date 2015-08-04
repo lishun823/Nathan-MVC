@@ -8,24 +8,17 @@ class HomeController extends BaseController {
     //default method
     protected function index() {
         echo "<pre>";
-        $all_settings = config("");
+        $all_settings = config();
         print_r($all_settings);
 
         echo "<hr>";
-        $user_settings = config("user");
-        print_r($user_settings);
+        $db_settings = config("database");
+        print_r($db_settings);
 
         echo "<hr>";
-        $username = config("user.name");
-        print_r($username);
+        $db_settings = config("database.opentime");
+        print_r($db_settings);
 
-        echo "<hr>";
-        $init = config("user.init_setting");
-        print_r($init);
-
-        echo "<hr>";
-        $init = config("user.init_setting.gold");
-        print_r($init);
 
     }
 
@@ -33,7 +26,5 @@ class HomeController extends BaseController {
         $msg = $this->model->getMsg();
         echo  $msg . ":::home_index:::";
 
-        $game = new GameModel();
-        echo $game->gameList();
     }
 }

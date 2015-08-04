@@ -14,7 +14,7 @@ function url_error($msg = "file_not_found") {
 function loadClasses($className) {
     $path = APP_PATH . "/";
     if (preg_match("/^[A-Z]\w*Model$/", $className)) {
-        $path = APP_PATH . "/" . M . "/models/";
+        $path = APP_PATH . "/application/" . M . "/models/";
     } else {
         $path = APP_PATH . "/classes/";
     }
@@ -32,20 +32,24 @@ function loadClasses($className) {
  * $excel = newClass("include/class/lib/phpExcel");
  *
  * @param  [type] $classPath [路径， 或者 "module名.model名"]
- * @return [type]            [返回一个对象的实例]
+ * @return [type]            [返回一个对象的实例, 文件不存在则返回false]
  */
 function newClass($classPath) {
 	if (strpos($classPath, ".")!==false){
 		list($module, $className) = explode(".", $classPath);
 		$className = strtolower(str_ireplace("model", "", $className));
-		$fileName = $module . "/models/" . $className . "Model.php";
+		$fileName = "application/". $module . "/models/" . $className . "Model.php";
 	    $clsName = ucfirst($className) . "Model";
 	}else{
 		$fileName =$classPath.".php";
 		$clsName=basename($fileName, ".php");
 	}
-	require $fileName;
-	return new $clsName();
+	if (file_exists($fileName)){
+		require $fileName;
+		return new $clsName();
+	}else{
+		return false;
+	}
 }
 
 /**
@@ -62,7 +66,7 @@ function newClass($classPath) {
 function config($key = "") {
     static $settings = array();
     if (count($settings) == 0) {
-        foreach (glob("config/*.php") as $cfgFile) {
+        foreach (glob("application/config/*.php") as $cfgFile) {
             $fname = basename($cfgFile, ".php");
             $config = array();
             include_once ($cfgFile);
