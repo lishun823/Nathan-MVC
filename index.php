@@ -54,7 +54,6 @@ spl_autoload_extensions('.php');
 spl_autoload_register('loadClasses');
 
 ob_start();
-$controller = null;
 
 if (preg_match("/^\w+$/", M) && preg_match("/^\w+$/", C) && preg_match("/^\w+$/", A)){
 	require("classes/basecontroller.php");

@@ -7,9 +7,9 @@ class GameController extends BaseController {
     }
     //default method
     protected function index() {
-        $user = newClass("user", "account");
+        $user = newClass("account.user");
         echo $user->getName();
-        echo  ":::game_index";
+        echo  ":::";
     }
 
 }
