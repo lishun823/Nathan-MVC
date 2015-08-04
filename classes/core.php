@@ -70,7 +70,7 @@ function log_message($filepath="", $msg="") {
 
     $now = date("Y-m-d H:i:s");
     $ip = get_client_ip();
-    $uri = $_SERVER['REQUEST_URI'];
+    $uri = IS_CLI ? "CLI:".implode("?", $_SERVER["argv"]) : $_SERVER["REQUEST_URI"];
     $logmsg ="$now $ip\r\n$uri\r\n$msg\r\n\r\n";
 
     flock($fp, LOCK_EX);
