@@ -17,6 +17,14 @@ define('IS_CGI',(0 === strpos(PHP_SAPI,'cgi') || false !== strpos(PHP_SAPI,'fcgi
 define('IS_WIN',strstr(PHP_OS, 'WIN') ? 1 : 0 );
 define('IS_CLI',PHP_SAPI=='cli'? 1   :   0);
 
+
+define('REQUEST_METHOD',IS_CLI ? "CLI" : $_SERVER['REQUEST_METHOD']);
+define('IS_GET',        REQUEST_METHOD =='GET' ? true : false);
+define('IS_POST',       REQUEST_METHOD =='POST' ? true : false);
+define('IS_PUT',        REQUEST_METHOD =='PUT' ? true : false);
+define('IS_DELETE',     REQUEST_METHOD =='DELETE' ? true : false);
+define('IS_AJAX',       (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'));
+
 require("application/common/functions.php");
 require("classes/core.php");
 
