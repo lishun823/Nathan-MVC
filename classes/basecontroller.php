@@ -11,8 +11,13 @@ abstract class BaseController {
     protected $view;
     public function __construct($action) {
         $this->action = $action;
-        $this->view = new View(get_class($this) , $action);
+        echo $modelFile = "models/".MODULE."/".CONTROLLER."Model.php";
+        if (file_exists($modelFile)){
+            echo $modelName = ucwords(MODULE)."Model";
+            //$this->model = new HomeModel();
+        }
     }
+
     //executes the requested method
     public function executeAction() {
         return $this->{$this->action}();

@@ -13,11 +13,11 @@ class Loader {
     //factory method which establishes the requested controller as an object
     public function createController() {
         //check our requested controller's class file exists and require it if so
-        $controllerFile = "controllers/" . MODULE . "/" . CONTROLLER . ".php";
+        $controllerFile = "controllers/" . MODULE . "/" . CONTROLLER . "Controller.php";
         if (file_exists($controllerFile)) {
             require ($controllerFile);
         } else {
-            $this->showError();
+            return $this->showError();
         }
         //does the class exist?
         //
@@ -31,13 +31,13 @@ class Loader {
                 if (method_exists($controllerClass, ACTION)) {
                     return new $controllerClass(ACTION);
                 } else {
-                    $this->showError();
+                    return $this->showError();
                 }
             } else {
-                $this->showError();
+                return $this->showError();
             }
         } else {
-            $this->showError();
+            return $this->showError();
         }
     }
 
@@ -47,7 +47,6 @@ class Loader {
      * @return [type] [description]
      */
     public function showError() {
-        require ("controllers/home/error.php");
-        return new ErrorController("badurl");
+        return error();
     }
 }
