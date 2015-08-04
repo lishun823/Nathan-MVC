@@ -7,7 +7,12 @@ if(version_compare(PHP_VERSION,'5.4.0','<')) {
     define('MAGIC_QUOTES_GPC',false);
 }
 
-defined('APP_PATH')     or define('APP_PATH',  str_replace("\\", "/", __DIR__) );
+define('LOG_REQUEST', true);
+
+defined('APP_PATH') or define('APP_PATH',  str_replace("\\", "/", __DIR__) );
+defined('LOG_PATH') or define('LOG_PATH',  APP_PATH. "/logs" );
+
+
 define('IS_CGI',(0 === strpos(PHP_SAPI,'cgi') || false !== strpos(PHP_SAPI,'fcgi')) ? 1 : 0 );
 define('IS_WIN',strstr(PHP_OS, 'WIN') ? 1 : 0 );
 define('IS_CLI',PHP_SAPI=='cli'? 1   :   0);
@@ -43,17 +48,25 @@ defined('M') or define("M", 'home');
 defined('C') or define("C", 'home');
 defined('A') or define("A", 'index');
 
-// 保证这些参数是干净的
-(preg_match("/^\w+$/", M) && preg_match("/^\w+$/", C) && preg_match("/^\w+$/", A)) or die(error());
-
 //echo "/* ".M."::".C."::".A." */";
 
 spl_autoload_extensions('.php');
 spl_autoload_register('loadClasses');
 
-require("classes/basecontroller.php");
-require("classes/basemodel.php");
+ob_start();
+$controller = null;
 
-$loader = new Loader(); //create the loader object
-$controller = $loader->createController(); //creates the requested controller object based on the 'controller' URL value
-if (is_object($controller)) $controller->executeAction(); //execute the requested controller's requested method based on the 'action' URL value. Controller methods output a View.
+if (preg_match("/^\w+$/", M) && preg_match("/^\w+$/", C) && preg_match("/^\w+$/", A)){
+	require("classes/basecontroller.php");
+	require("classes/basemodel.php");
+	$loader = new Loader();
+	$controller = $loader->createController();
+	if (is_object($controller)) $controller->executeAction();
+}else{
+	url_error();
+}
+
+$response = ob_get_contents();
+ob_end_flush();
+
+log_message("", $response);

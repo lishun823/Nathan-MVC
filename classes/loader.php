@@ -41,6 +41,6 @@ class Loader {
      * @return [type] [description]
      */
     public function showError() {
-        return error();
+        return url_error();
     }
 }
