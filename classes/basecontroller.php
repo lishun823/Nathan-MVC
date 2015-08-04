@@ -8,13 +8,13 @@
 abstract class BaseController {
     protected $action;
     protected $model;
-    protected $view;
     public function __construct($action) {
         $this->action = $action;
-        echo $modelFile = "models/".MODULE."/".CONTROLLER."Model.php";
+        $modelFile = M."/models/".C."Model.php";
         if (file_exists($modelFile)){
-            echo $modelName = ucwords(MODULE)."Model";
-            //$this->model = new HomeModel();
+            include_once($modelFile);
+            $modelName = ucfirst(M)."Model";
+            $this->model = new $modelName();
         }
     }
 

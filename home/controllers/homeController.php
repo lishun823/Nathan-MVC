@@ -12,6 +12,7 @@ class HomeController extends BaseController {
     }
     //default method
     protected function index() {
+        echo $msg = $this->model->index();
         echo  "home_index";
     }
 

@@ -13,7 +13,7 @@ class Loader {
     //factory method which establishes the requested controller as an object
     public function createController() {
         //check our requested controller's class file exists and require it if so
-        $controllerFile = "controllers/" . MODULE . "/" . CONTROLLER . "Controller.php";
+        $controllerFile = M. "/controllers/". C . "Controller.php";
         if (file_exists($controllerFile)) {
             require ($controllerFile);
         } else {
@@ -21,15 +21,15 @@ class Loader {
         }
         //does the class exist?
         //
-        $controllerClass = ucfirst(CONTROLLER) . "Controller";
+        $controllerClass = ucfirst(C) . "Controller";
 
         if (class_exists($controllerClass)) {
             $parents = class_parents($controllerClass);
             //does the class inherit from the BaseController class?
             if (in_array("BaseController", $parents)) {
                 //does the requested class contain the requested action as a method?
-                if (method_exists($controllerClass, ACTION)) {
-                    return new $controllerClass(ACTION);
+                if (method_exists($controllerClass, A)) {
+                    return new $controllerClass(A);
                 } else {
                     return $this->showError();
                 }
@@ -42,7 +42,7 @@ class Loader {
     }
 
     /**
-     * controller 或者 method 找不到的时候，显示出错页
+     * controller 或者 method 找不到的时候，显示出错信息
      *
      * @return [type] [description]
      */

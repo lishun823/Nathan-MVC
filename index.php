@@ -23,27 +23,28 @@ define('IS_CLI',PHP_SAPI=='cli'? 1   :   0);
 require("classes/functions.php");
 if (IS_CLI && intval($_SERVER["argc"])>1) parse_str($_SERVER["argv"][1], $_GET);
 
-!empty(element('m', $_GET)) && define("MODULE", strtolower(element('m', $_GET)));
-!empty(element('c', $_GET)) && define("CONTROLLER", strtolower(element('c', $_GET)));
-!empty(element('a', $_GET)) && define("ACTION", strtolower(element('a', $_GET)));
+!empty(element('m', $_GET)) && define("M", strtolower(element('m', $_GET)));
+!empty(element('c', $_GET)) && define("C", strtolower(element('c', $_GET)));
+!empty(element('a', $_GET)) && define("A", strtolower(element('a', $_GET)));
 
 $uri = element("PHP_SELF", $_SERVER);
 if (strpos($uri, "index.php/")!==false){
 	$parts= explode("/", strstr($uri, "index.php/"));
 	if (count($parts)>3){
-		defined('MODULE') or define("MODULE", strtolower($parts[1]));
-		defined('CONTROLLER') or define("CONTROLLER", strtolower($parts[2]));
-		defined('ACTION') or define("ACTION", strtolower($parts[3]));
+		defined('M') or define("M", strtolower($parts[1]));
+		defined('C') or define("C", strtolower($parts[2]));
+		defined('A') or define("A", strtolower($parts[3]));
 	}
 }
 
-defined('MODULE') or define("MODULE", 'home');
-defined('CONTROLLER') or define("CONTROLLER", 'home');
-defined('ACTION') or define("ACTION", 'index');
+defined('M') or define("M", 'home');
+defined('C') or define("C", 'home');
+defined('A') or define("A", 'index');
 
-(preg_match("/^\w+$/", MODULE) && preg_match("/^\w+$/", CONTROLLER) && preg_match("/^\w+$/", ACTION)) or die(error());
+(preg_match("/^\w+$/", M) && preg_match("/^\w+$/", C) && preg_match("/^\w+$/", A)) or die(error());
 
-//echo "/* ".MODULE."::".CONTROLLER."::".ACTION." */";
+//echo "/* ".M."::".C."::".A." */";
+//
 
 require("classes/basecontroller.php");
 require("classes/basemodel.php");
