@@ -1,10 +1,4 @@
 <?php
-/*
- * Project: Nathan MVC
- * File: index.php
- * Purpose: landing page which handles all requests
- * Author: Nathan Davison
- */
 
 if(version_compare(PHP_VERSION,'5.4.0','<')) {
     ini_set('magic_quotes_runtime',0);
@@ -13,16 +7,13 @@ if(version_compare(PHP_VERSION,'5.4.0','<')) {
     define('MAGIC_QUOTES_GPC',false);
 }
 
-
 defined('APP_PATH')     or define('APP_PATH',  str_replace("\\", "/", __DIR__) );
 define('IS_CGI',(0 === strpos(PHP_SAPI,'cgi') || false !== strpos(PHP_SAPI,'fcgi')) ? 1 : 0 );
 define('IS_WIN',strstr(PHP_OS, 'WIN') ? 1 : 0 );
 define('IS_CLI',PHP_SAPI=='cli'? 1   :   0);
 
-
 require("classes/functions.php");
 require("classes/core.php");
-
 
 /**
  * 命令行的调用方式:
@@ -57,16 +48,12 @@ defined('A') or define("A", 'index');
 
 //echo "/* ".M."::".C."::".A." */";
 
-
 spl_autoload_extensions('.php');
 spl_autoload_register('loadClasses');
-
 
 require("classes/basecontroller.php");
 require("classes/basemodel.php");
 
-
 $loader = new Loader(); //create the loader object
 $controller = $loader->createController(); //creates the requested controller object based on the 'controller' URL value
 if (is_object($controller)) $controller->executeAction(); //execute the requested controller's requested method based on the 'action' URL value. Controller methods output a View.
-

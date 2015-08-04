@@ -1,10 +1,4 @@
 <?php
-/*
- * Project: Nathan MVC
- * File: /classes/loader.php
- * Purpose: class which maps URL requests to controller object creation
- * Author: Nathan Davison
-*/
 
 class Loader {
     public function __construct() {
