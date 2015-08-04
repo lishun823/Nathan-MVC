@@ -45,10 +45,15 @@ defined('A') or define("A", 'index');
 
 //echo "/* ".M."::".C."::".A." */";
 //
+//
+//
+spl_autoload_extensions('.php');
+spl_autoload_register('loadClasses');
+
 
 require("classes/basecontroller.php");
 require("classes/basemodel.php");
-require("classes/loader.php");
+
 
 $loader = new Loader(); //create the loader object
 $controller = $loader->createController(); //creates the requested controller object based on the 'controller' URL value

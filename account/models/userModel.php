@@ -5,11 +5,14 @@
  * Purpose: model for the home controller.
  * Author: Nathan Davison
  */
-class HomeModel extends BaseModel{
 
-    public function getMsg()
+class UserModel extends BaseModel
+{
+
+    public function getName()
     {
-        return "Welcome to my home";
+        return "lishun";
     }
+
 }
 

@@ -12,8 +12,7 @@ abstract class BaseController {
         $this->action = $action;
         $modelFile = M."/models/".C."Model.php";
         if (file_exists($modelFile)){
-            include_once($modelFile);
-            $modelName = ucfirst(M)."Model";
+            $modelName = ucfirst(C)."Model";
             $this->model = new $modelName();
         }
     }
