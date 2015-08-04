@@ -53,7 +53,7 @@ function newClass($classPath) {
 }
 
 /**
- * 读取配置文件，程序会加载 config目录下所有的php文件
+ * 读取配置文件，程序会加载config目录下所有的php文件
  * 调用方式:
  * config();
  * config("database");
@@ -117,3 +117,96 @@ function log_message($filepath="", $msg="") {
     if ($newfile) chmod($filepath, 0644);
 
 }
+
+
+
+/**
+ * 获取输入参数 支持过滤和默认值
+ * 使用方法:
+ * <code>
+ * I('id',0); 获取id参数 自动判断get或者post
+ * I('post.name','','htmlspecialchars'); 获取$_POST['name']
+ * I('get.'); 获取$_GET
+ * </code>
+ * @param string $name 变量的名称 支持指定类型
+ * @param mixed $default 不存在的时候默认值
+ * @param mixed $filter 参数过滤方法
+ * @param mixed $datas 要获取的额外数据源
+ * @return mixed
+ */
+function I($name='',$default='',$filter=null,$datas=null) {
+    if(strpos($name,'.')) { // 指定参数来源
+        list($method,$name) =   explode('.',$name,2);
+    }else{ // 默认为自动判断
+        $method =   'param';
+    }
+    switch(strtolower($method)) {
+        case 'get'     :   $input =& $_GET;break;
+        case 'post'    :   $input =& $_POST;break;
+        case 'put'     :   parse_str(file_get_contents('php://input'), $input);break;
+        case 'param'   :
+            switch($_SERVER['REQUEST_METHOD']) {
+                case 'POST':
+                    $input  =  $_POST;
+                    break;
+                case 'PUT':
+                    parse_str(file_get_contents('php://input'), $input);
+                    break;
+                default:
+                    $input  =  $_GET;
+            }
+            break;
+        case 'request' :   $input =& $_REQUEST;   break;
+        case 'session' :   $input =& $_SESSION;   break;
+        case 'cookie'  :   $input =& $_COOKIE;    break;
+        case 'server'  :   $input =& $_SERVER;    break;
+        case 'globals' :   $input =& $GLOBALS;    break;
+        case 'data'    :   $input =& $datas;      break;
+        default:
+            return NULL;
+    }
+    if(''==$name) { // 获取全部变量
+        $data       =   $input;
+        $filters =$filter;
+        if($filters) {
+            if(is_string($filters)){
+                $filters    =   explode(',',$filters);
+            }
+            foreach($filters as $filter){
+                $data = array_map_recursive($filter,$data); // 参数过滤
+            }
+        }
+    }else{
+        $data=isset($input[$name]) ?  $input[$name] : (isset($default)?$default:NULL);
+        $filters =$filter;
+        if($filters) {
+            if(is_string($filters)){
+                $filters    =   explode(',',$filters);
+            }elseif(is_int($filters)){
+                $filters    =   array($filters);
+            }
+
+            foreach($filters as $filter){
+                if(function_exists($filter)) {
+                    $data   =   is_array($data)?array_map_recursive($filter,$data):$filter($data); // 参数过滤
+                }else{
+                    $data   =   filter_var($data,is_int($filter)?$filter:filter_id($filter));
+                    if(false === $data) {
+                        return   isset($default)?$default:NULL;
+                    }
+                }
+            }
+        }
+    }
+    return $data;
+}
+
+function array_map_recursive($filter, $data) {
+     $result = array();
+     foreach ($data as $key => $val) {
+         $result[$key] = is_array($val)
+             ? array_map_recursive($filter, $val)
+             : call_user_func($filter, $val);
+     }
+     return $result;
+ }

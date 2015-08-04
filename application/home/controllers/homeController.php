@@ -23,8 +23,7 @@ class HomeController extends BaseController {
     }
 
     public function test(){
-        $msg = $this->model->getMsg();
-        echo  $msg . ":::home_index:::";
+        print_r(I("aaaaaa","ssbb","md5"));
 
     }
 }
