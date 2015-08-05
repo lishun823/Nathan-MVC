@@ -61,9 +61,10 @@ function newClass($classPath) {
  * config("database.foo.bar");
  *
  * @param  string $key [为空则输出所有配置, 其他情况输出指定文件指定节点的配置]
+ * @param  string $default_value 节点不存在的时候的默认值。
  * @return [type]      [description]
  */
-function config($key = "") {
+function config($key = "", $default_value = "") {
     static $settings = array();
     if (count($settings) == 0) {
         foreach (glob("application/config/*.php") as $cfgFile) {
@@ -78,27 +79,43 @@ function config($key = "") {
     $arr = explode(".", $key);
     $ret = $settings;
     for ($i = 0; $i < count($arr); $i++) {
-        $ret = isset($ret[$arr[$i]]) ? $ret[$arr[$i]] : NULL;
+        $ret = isset($ret[$arr[$i]]) ? $ret[$arr[$i]] : $default_value;
     }
     return $ret;
 }
 
+function C($key = "", $default_value = "") {
+	return config($key, $default_value);
+}
+
 /**
  * 日志记录，会在 $msg之前增加 日期，IP, URI等内容
+ * log_message("foo/bar/log1.log", "something");  会写在日志目录下  LOG_PATH."/foo/bar/log1.log"
+ * log_message("/foo/bar/log2.log", "something"); 会写在绝对路径  /foo/bar/log2.log"
  *
  * @param  string $filepath 如果次参数为空，则默认日志文件为  LOG_PATH/模块/控制器_方法_日期.log
  * @param  string $msg      [description]
  * @return [type]           [description]
  */
-function log_message($filepath="", $msg="") {
-	if ($filepath==="" && LOG_REQUEST){
-		if (defined('URL_ERROR')){
-			$filepath = LOG_PATH."/url_error_".date('Ym').".log";
-		}else{
-			$filepath = LOG_PATH."/".M;
-			if (!is_dir($filepath)) mkdir($filepath, 0777, true);
-			$filepath =$filepath. "/".C."_". A . date("_Ym").".log";
+
+function log_message($filepath="", $msg="", $controller=null) {
+	$filepath = trim($filepath);
+	if ($filepath===""){
+		if (is_object($controller) && in_array_case(A,$controller->disable_logging)) return false;
+
+		if (config("app.log_request")){
+			if (defined('URL_ERROR')){
+				$filepath = LOG_PATH."/url_error_".date('Ym').".log";
+			}else{
+				$filepath = LOG_PATH."/".M;
+				if (!is_dir($filepath)) mkdir($filepath, 0777, true);
+				$filepath =$filepath. "/".C."_". A . date("_Ym").".log";
+			}
 		}
+	}else{
+		if (substr($filepath,0,1)!=="/") $filepath = LOG_PATH."/". ltrim($filepath, "/");
+		$dirpath = dirname($filepath);
+		if (!is_dir($dirpath)) mkdir($dirpath, 0777, true);
 	}
 
     $newfile = file_exists($filepath);

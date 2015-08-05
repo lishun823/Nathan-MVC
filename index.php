@@ -7,8 +7,6 @@ if(version_compare(PHP_VERSION,'5.4.0','<')) {
     define('MAGIC_QUOTES_GPC',false);
 }
 
-define('LOG_REQUEST', true);
-
 defined('APP_PATH') or define('APP_PATH',  str_replace("\\", "/", __DIR__) );
 defined('LOG_PATH') or define('LOG_PATH',  APP_PATH. "/logs" );
 
@@ -62,6 +60,7 @@ spl_autoload_extensions('.php');
 spl_autoload_register('loadClasses');
 
 ob_start();
+$controller = null;
 
 if (preg_match("/^\w+$/", M) && preg_match("/^\w+$/", C) && preg_match("/^\w+$/", A)){
 	require("application/common/basecontroller.php");
@@ -76,4 +75,4 @@ if (preg_match("/^\w+$/", M) && preg_match("/^\w+$/", C) && preg_match("/^\w+$/"
 $response = ob_get_contents();
 ob_end_flush();
 
-log_message("", $response);
+log_message("", $response, $controller);
