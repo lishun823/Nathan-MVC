@@ -11,7 +11,7 @@ abstract class BaseController {
         $this->model = newClass(M.".".C);
     }
 
-    //executes the requested method
+
     public function executeAction() {
         return $this->{$this->action}();
     }
@@ -22,7 +22,6 @@ abstract class BaseController {
         $this->viewfile = $viewfile;
         if (file_exists($viewfile)) {
             extract($data);
-            unset($data);
             if (file_exists($templateFile)){
                 require($templateFile);
             }else{
