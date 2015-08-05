@@ -9,7 +9,7 @@ class HomeController extends BaseController {
     }
 
     protected function index() {
-        echo "home_index";
+        $this->model->getMsg();
     }
 
     public function test(){

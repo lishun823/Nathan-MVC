@@ -1,9 +1,20 @@
 <?php
+/**
+ * 此函数只用于处理 URL错误，比如404等
+ *
+ * @param  string $msg [description]
+ * @return [type]      [description]
+ */
 function url_error($msg = "file_not_found") {
 	defined('URL_ERROR') or define("URL_ERROR", true);
     echo "error: $msg";
     return false;
 }
+
+function E($msg){
+	die($msg);
+}
+
 
 /**
  * 自动加载对应的类文件，给 spl_autoload_register用的
