@@ -8,6 +8,7 @@ $config[0]["dbname"] = "test";
 $config[0]["charset"] = "utf8";
 $config[0]["pconnect"] = false;
 
+
 $config[1]["host"] = "127.0.0.1";
 $config[1]["port"] = "3306";
 $config[1]["user"] = "root";
@@ -31,4 +32,3 @@ $config[3]["pass"] = "";
 $config[3]["dbname"] = "test3";
 $config[3]["charset"] = "utf8";
 $config[3]["pconnect"] = false;
-

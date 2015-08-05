@@ -24,17 +24,14 @@ class Mysql {
 
     private $lastTimeUsed = 0;
 
-    public function getInfo($key){
-        return property_exists($this, $key) ? $this->$key : null;
-    }
-
     private function getMasterConnect() {
         return $this->initConnect(0);
     }
 
     private function getSlaveConnect(){
+        static $rnd = -1;
         $cfg = config("mysql");
-        $rnd = count($cfg)>1 ? rand(1, count($cfg)-1) : 0;
+        if ($rnd==-1) $rnd = count($cfg)>1 ? rand(1, count($cfg)-1) : 0;
         return $this->initConnect($rnd);
     }
 
@@ -46,10 +43,13 @@ class Mysql {
             $host = $cfg["host"] . ":" . $cfg["port"];
             if ($cfg["pconnect"]) {
                 $conns[$cfgid] = mysql_pconnect($host, $cfg["user"], $cfg["pass"], 131072);
+                echo "pconnnect use config[{$cfgid}]\r\n";
             } else {
                 $conns[$cfgid] = mysql_connect($host, $cfg["user"], $cfg["pass"], true, 131072);
-                //echo "connnect use config[{$cfgid}]\r\n";
+                echo "connnect use config[{$cfgid}]\r\n";
             }
+
+
             if (!mysql_select_db($cfg['dbname'], $conns[$cfgid])) return $this->error();
 
             $dbVersion = mysql_get_server_info($conns[$cfgid]);
@@ -63,6 +63,11 @@ class Mysql {
 
         $this->cfgid = $cfgid;
         return $conns[$cfgid];
+    }
+
+
+    public function getInfo($key){
+        return property_exists($this, $key) ? $this->$key : null;
     }
 
     public function query($sql = "", $keyField ="", $compact_result=false) {
