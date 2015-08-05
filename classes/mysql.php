@@ -43,13 +43,11 @@ class Mysql {
             $host = $cfg["host"] . ":" . $cfg["port"];
             if ($cfg["pconnect"]) {
                 $conns[$cfgid] = mysql_pconnect($host, $cfg["user"], $cfg["pass"], 131072);
-                echo "pconnnect use config[{$cfgid}]\r\n";
             } else {
                 $conns[$cfgid] = mysql_connect($host, $cfg["user"], $cfg["pass"], true, 131072);
-                echo "connnect use config[{$cfgid}]\r\n";
             }
 
-
+            if (!$conns[$cfgid]) return $this->error();
             if (!mysql_select_db($cfg['dbname'], $conns[$cfgid])) return $this->error();
 
             $dbVersion = mysql_get_server_info($conns[$cfgid]);
@@ -106,7 +104,7 @@ class Mysql {
 
 
 
-    public function exec($sql = "", $keyField ="", $compact_result=false) {
+    public function exec($sql = "") {
         $link = $this->getMasterConnect();
 
         $this->lastSql = $sql;
@@ -135,8 +133,9 @@ class Mysql {
         if ($n!=="") log_message("mysql/slow/{$month}_{$n}s.log", $msg);
     }
 
-    public function error($msg=""){
-        if ($msg=="") $msg=mysql_error($this->conn);
+    private function error($msg=""){
+        $msg=$msg . mysql_error($this->conn)."\r\n";
+        $msg=$msg . "SQL===={$this->lastSql}\r\n";
         $this->lastError = $msg;
         $month = date("Ym");
         log_message("mysql/error/error_{$month}.log", $msg);

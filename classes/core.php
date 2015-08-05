@@ -56,7 +56,7 @@ function newClass($classPath) {
 		$clsName=basename($fileName, ".php");
 	}
 	if (file_exists($fileName)){
-		require $fileName;
+		require_once $fileName;
 		return new $clsName();
 	}else{
 		return false;
