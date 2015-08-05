@@ -9,10 +9,13 @@ class HomeController extends BaseController {
     }
 
     protected function index() {
-        $this->model->getMsg();
+        $info = array("name"=>"mvc", "info"=>array(11,12,13));
+        $this->display($info);
+
     }
 
     public function test(){
-        echo "home_test";
+        $info = array("name"=>"mvc", "info"=>array(11,12,13));
+        $this->output($info);
     }
 }
