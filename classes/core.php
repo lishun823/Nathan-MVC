@@ -168,12 +168,13 @@ function I($name='',$default='',$filter=null,$datas=null) {
     }else{ // 默认为自动判断
         $method =   'param';
     }
+    $method = isset($_SERVER['REQUEST_METHOD']) ? strtoupper($_SERVER['REQUEST_METHOD']) : 'GET';
     switch(strtolower($method)) {
         case 'get'     :   $input =& $_GET;break;
         case 'post'    :   $input =& $_POST;break;
         case 'put'     :   parse_str(file_get_contents('php://input'), $input);break;
         case 'param'   :
-            switch($_SERVER['REQUEST_METHOD']) {
+            switch($method) {
                 case 'POST':
                     $input  =  $_POST;
                     break;
@@ -238,3 +239,25 @@ function array_map_recursive($filter, $data) {
      }
      return $result;
  }
+
+
+function U($path, $params=null, $addDomain=false){
+    $path = str_replace(array("/","-"), ".", $path);
+    list($module, $controller, $action,) = explode(".", $path);
+    $url="";
+    if ($addDomain){
+        $host = $_SERVER["HTTP_HOST"];
+        $path = trim(dirname($_SERVER["REQUEST_URI"]),"/");
+        $url.="http://{$host}/{$path}/";
+    }
+    if (C("app.url_rewrite")){
+        $url.="$module/$controller/$action";
+        if ($params) $url.="?";
+    }else{
+        $url.="index.php?m={$module}&c={$controller}&a={$action}";
+        if ($params) $url.="&";
+    }
+    if (is_string($params)) $url.=ltrim($params,'&');
+    if (is_array($params)) $url.=http_build_query($params);
+    return $url;
+}

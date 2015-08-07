@@ -26,6 +26,8 @@ define('IS_AJAX',       (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower(
 require("application/common/functions.php");
 require("classes/core.php");
 
+date_default_timezone_set(config("app.timezone"));
+
 /**
  * 命令行的调用方式:
  *  php index.php "m=home&c=game&a=list&key1=$value1&key2=$value2&key3=$value3&key4=$value4"
@@ -49,12 +51,18 @@ if (strpos($uri, "index.php/")!==false){
 	}
 }
 
-// 默认情况访问默认的控制器
-defined('M') or define("M", 'home');
-defined('C') or define("C", 'home');
-defined('A') or define("A", 'index');
+$thisFileName = basename(__FILE__, ".php");
 
-//echo "/* ".M."::".C."::".A." */";
+// 默认情况访问默认的控制器
+if ($thisFileName == "index"){
+	defined('M') or define("M", 'home');
+	defined('C') or define("C", 'home');
+	defined('A') or define("A", 'index');
+}elseif (preg_match("/^\w+$/", $thisFileName)){
+	defined('M') or define("M", $thisFileName);
+	defined('C') or define("C", $thisFileName);
+	defined('A') or define("A", $thisFileName);
+}
 
 spl_autoload_extensions('.php');
 spl_autoload_register('loadClasses');
@@ -67,7 +75,9 @@ if (preg_match("/^\w+$/", M) && preg_match("/^\w+$/", C) && preg_match("/^\w+$/"
 	require("application/common/basemodel.php");
 	$loader = new Loader();
 	$controller = $loader->createController();
-	if (is_object($controller)) $controller->executeAction();
+	if (is_object($controller)) {
+		$controller->executeAction();
+	}
 }else{
 	url_error();
 }

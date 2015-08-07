@@ -74,7 +74,10 @@ class Mysql {
         $this->lastSql = $sql;
         $time_start = time();
         $query = mysql_query($sql, $link);
-        if (!$query) return $this->error();
+        if (!$query) {
+            $this->error();
+            return false;
+        }
         $this->recordSlowQuery($time_start);
 
         $result = array();
@@ -110,7 +113,10 @@ class Mysql {
         $this->lastSql = $sql;
         $time_start = time();
         $query = mysql_query($sql, $link);
-        if (!$query) return $this->error();
+        if (!$query) {
+            $this->error();
+            return false;
+        }
         $this->recordSlowQuery($time_start);
 
         $this->lastInsID =mysql_insert_id($link);
