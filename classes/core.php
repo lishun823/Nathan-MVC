@@ -241,23 +241,24 @@ function array_map_recursive($filter, $data) {
  }
 
 
-function U($path, $params=null, $addDomain=false){
+function U($path, $params=null, $siteurl=false){
     $path = str_replace(array("/","-"), ".", $path);
     list($module, $controller, $action,) = explode(".", $path);
-    $url="";
-    if ($addDomain){
-        $host = $_SERVER["HTTP_HOST"];
-        $path = trim(dirname($_SERVER["REQUEST_URI"]),"/");
-        $url.="http://{$host}/{$path}/";
-    }
+
+    $url= SITE_URL;
+
     if (C("app.url_rewrite")){
-        $url.="$module/$controller/$action";
+        $url =rtrim($url, "/")."/$module/$controller/$action";
         if ($params) $url.="?";
     }else{
-        $url.="index.php?m={$module}&c={$controller}&a={$action}";
+        $url =rtrim($url, "/")."/index.php?m={$module}&c={$controller}&a={$action}";
         if ($params) $url.="&";
     }
     if (is_string($params)) $url.=ltrim($params,'&');
     if (is_array($params)) $url.=http_build_query($params);
+
+    $host= "http://". $_SERVER["HTTP_HOST"];
+    if (!$siteurl) $url = str_replace($host, "", $url);
+
     return $url;
 }

@@ -1,12 +1,22 @@
 <?php
 
-$config[0]["host"] = "127.0.0.1";
-$config[0]["port"] = "3306";
-$config[0]["user"] = "root";
-$config[0]["pass"] = "";
-$config[0]["dbname"] = "test";
-$config[0]["charset"] = "utf8";
-$config[0]["pconnect"] = false;
+if (IS_WIN){
+	$config[0]["host"] = "127.0.0.1";
+	$config[0]["port"] = "3306";
+	$config[0]["user"] = "root";
+	$config[0]["pass"] = "";
+	$config[0]["dbname"] = "test";
+	$config[0]["charset"] = "utf8";
+	$config[0]["pconnect"] = false;
+}else{
+	$config[0]["host"] = "127.0.0.1";
+	$config[0]["port"] = "3306";
+	$config[0]["user"] = "root";
+	$config[0]["pass"] = "api@9yu";
+	$config[0]["dbname"] = "test";
+	$config[0]["charset"] = "utf8";
+	$config[0]["pconnect"] = false;
+}
 
 /*
 $config[1]["host"] = "127.0.0.1";
